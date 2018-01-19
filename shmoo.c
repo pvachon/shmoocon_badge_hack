@@ -64,7 +64,6 @@ void setup_wifi(void)
     uint8_t mac_addr[6];
     wifi_get_macaddr(SOFTAP_IF, mac_addr);
     mac_addr[5] = id;
-    wifi_set_macaddr(SOFTAP_IF, mac_addr);
     os_printf("MAC addr is %02x:%02x:%02x-%02x:%02x:%02x\n",
             mac_addr[0],
             mac_addr[1],
@@ -73,14 +72,15 @@ void setup_wifi(void)
             mac_addr[4],
             mac_addr[5]);
     memset(&cfg, 0, sizeof(cfg));
-    wifi_softap_get_config(&cfg);
-    memset(cfg.ssid, 0, sizeof(cfg.ssid));
     strcpy(cfg.ssid, bssids[id].ssid);
     cfg.ssid_len = strlen(bssids[id].ssid);
+    os_printf("New ESSID: [%s] len=%d\n", cfg.ssid, cfg.ssid_len);
     strcpy(cfg.password, "lolhy");
     cfg.authmode = AUTH_WPA_PSK;
     cfg.channel = 6;
     ETS_UART_INTR_DISABLE();
+    wifi_set_opmode(SOFTAP_MODE);
+    wifi_set_macaddr(SOFTAP_IF, mac_addr);
     wifi_softap_set_config(&cfg);
     ETS_UART_INTR_ENABLE();
 }
@@ -119,9 +119,7 @@ void user_init(void)
     os_printf("ShmooCon is Starting...\r\n");
 
     /* Fire up the wifi interface */
-    ETS_UART_INTR_DISABLE();
-    wifi_set_opmode(SOFTAP_MODE);
-    ETS_UART_INTR_ENABLE();
+    setup_wifi();
 
     /* Arm event timer (500ms, repeating) to sample the temperature probe */
     os_timer_disarm((os_timer_t *)&temp_timer);
