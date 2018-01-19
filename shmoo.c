@@ -70,7 +70,7 @@ struct base_stations bssids[] = {
     SSID("7. And Desert You")
 };
 
-#define INTERVAL    1000
+#define INTERVAL    32
 
 /**
  * Setup the wifi interface parameters, and initiate a connection to the STA.
@@ -83,7 +83,9 @@ void setup_wifi_interface(void)
 static ICACHE_FLASH_ATTR
 void _on_beacon_frame_cb(uint8_t status)
 {
+    /*
     os_printf("Beacon frame sent, status: %u\n", (unsigned)status);
+    */
 }
 
 /**
@@ -109,6 +111,7 @@ void send_beacon_frame(size_t id)
 
 
     mac_addr[5] = id;
+#if 0
     os_printf("MAC addr is %02x:%02x:%02x-%02x:%02x:%02x\n",
             mac_addr[0],
             mac_addr[1],
@@ -116,6 +119,7 @@ void send_beacon_frame(size_t id)
             mac_addr[3],
             mac_addr[4],
             mac_addr[5]);
+#endif
 
     beacon_frame[10] = beacon_frame[16] = mac_addr[0];
     beacon_frame[11] = beacon_frame[17] = mac_addr[1];
@@ -125,6 +129,7 @@ void send_beacon_frame(size_t id)
     beacon_frame[15] = beacon_frame[21] = mac_addr[5];
 
     size_t len = offs + sizeof(beacon_footer);
+#if 0
     os_printf("Length: %u\n", len);
 
     for (size_t i = 0; i < len; i++) {
@@ -135,10 +140,13 @@ void send_beacon_frame(size_t id)
     }
 
     os_printf("\n");
+#endif
 
     int ret1 = wifi_send_pkt_freedom(beacon_frame, len, 0);
 
-    os_printf("returns: %d\n", ret1);
+    if (ret1 != 0) {
+        os_printf("returns: %d\n", ret1);
+    }
 }
 
 static
@@ -149,7 +157,6 @@ int last_id = 0;
 static ICACHE_FLASH_ATTR
 void update_essids(void *arg)
 {
-    os_printf("Currently on ID %d\n", last_id);
     /* Check the status of Wifi before we move along */
     send_beacon_frame(last_id);
 
