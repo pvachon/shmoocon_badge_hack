@@ -61,16 +61,23 @@ struct base_stations {
 
 static
 struct base_stations bssids[] = {
-    SSID("1. Never Gonna"),
-    SSID("2. Give You Up"),
-    SSID("3. Never Gonna"),
-    SSID("4. Let You Down"),
-    SSID("5. Never Gonna"),
-    SSID("6. Run Around"),
-    SSID("7. And Desert You")
+    SSID("01. Never Gonna"),
+    SSID("02. Give You Up"),
+    SSID("03. Never Gonna"),
+    SSID("04. Let You Down"),
+    SSID("05. Never Gonna"),
+    SSID("06. Run Around"),
+    SSID("07. And Desert You"),
+    SSID("08. Never Gonna"),
+    SSID("09. Make You Cry"),
+    SSID("10. Never Gonna"),
+    SSID("11. Say Goodbye"),
+    SSID("12. Never Gonna"),
+    SSID("13. Tell a Lie"),
+    SSID("14. And Hurt You"),
 };
 
-#define INTERVAL    32
+#define INTERVAL    16
 
 /**
  * Setup the wifi interface parameters, and initiate a connection to the STA.
